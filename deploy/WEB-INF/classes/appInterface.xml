@@ -12,6 +12,7 @@
 			select DISTINCT sectionid from app_ztrecord where 1=1
 		 	<if test="whether!=null"> and whether=#{whether}</if>
 			<if test="courseid!=null"> and courseid=#{courseid}</if>
+			<if test="appuserid!=null"> and appuserid=#{appuserid}</if>
 		 )
 	</select>
 	
@@ -95,6 +96,29 @@ values(
 	<insert id="addAppUser" parameterType="com.app.entity.AppUser">
 		insert into app_user(uuid,username,password,part) values(#{uuid},#{username},#{password},#{part});
 	</insert>
+	
+	
+	
+	
+	<update id="updateAppUser" parameterType="com.app.entity.AppUser">
+		update app_user set 
+		password=#{password},
+		nickname=#{nickname},
+		email=#{email},
+		sex=#{sex},
+		schoolid=#{schoolid},
+		schoolname=#{schoolname},
+		courseid=#{courseid},
+		coursename=#{coursename},
+		state=#{state},
+		vip=#{vip},
+		vipintegral=#{vipintegral},
+		vipstate=#{vipstate},
+		vipendtime=#{vipendtime},
+		realname=#{realname},
+		imgpath=#{imgpath}
+		where uuid = #{uuid}
+	</update>
 	
 	
 </mapper>

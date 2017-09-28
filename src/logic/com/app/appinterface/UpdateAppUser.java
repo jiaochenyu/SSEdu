@@ -1,6 +1,7 @@
 package com.app.appinterface;
 
 import com.app.entity.AppSection;
+import com.app.entity.AppUser;
 import com.cmit.cycle.core.CycleLogic;
 import com.gsys.common.ClassSettings;
 import com.gsys.common.DbExecutor;
@@ -20,7 +21,7 @@ import org.json.JSONObject;
 import org.our.cycle.utils.SafetyUtils;
 
 
-public class LoadZTRecordSection implements CycleLogic{
+public class UpdateAppUser implements CycleLogic{
 
 
 	public int invoker(Dictionary dictionary){
@@ -29,24 +30,33 @@ public class LoadZTRecordSection implements CycleLogic{
 		String msg = (String) dictionary.get(ClassSettings.STATUS_MSG);
 		String data=(String) dictionary.get(ClassSettings.DOM_DOC);
 		org.json.simple.JSONObject userobj = (org.json.simple.JSONObject) dictionary.get(ClassSettings.APP_USER);
-		String appuserid = (String)userobj.get("uuid");
+		String useruuid = (String)userobj.get("uuid");
 		SqlSession mysession = null;
 		JSONArray jsonary = null;
 		try{
-			JSONObject dataobj = new JSONObject(data);
-			Map map = new HashMap();
-			if(dataobj.has("courseid")){
-				map.put("courseid", dataobj.getString("courseid"));
-			}
-			if(dataobj.has("whether")){
-				map.put("whether",dataobj.getInt("whether"));
-			}
-			map.put("appuserid",appuserid);
 			mysession = DbExecutor.open();
-			List<AppSection> list = mysession.selectList("gsys.listZtRecordSectionByCid",map);
-			jsonary = new JSONArray(list);
+			AppUser user = (AppUser) mysession.selectOne("gsys.findUserByUuid",useruuid);
+			JSONObject dataobj = new JSONObject(data);
+			if(dataobj.has("nickname")){
+				user.setNickname(dataobj.getString("nickname"));
+			}
+			if(dataobj.has("email")){
+				user.setEmail(dataobj.getString("email"));
+			}
+			if(dataobj.has("sex")){
+				user.setSex(dataobj.getString("sex"));
+			}
+			if(dataobj.has("realname")){
+				user.setRealname(dataobj.getString("realname"));
+			}
+			
+			mysession.update("gsys.updateAppUser",user);
+			mysession.commit();
+			
 		}catch(Exception e){
 			e.printStackTrace();
+			code = -1;
+			msg = "修改失败";
 		}finally{
 			DbExecutor.close(mysession);
 		}
@@ -54,9 +64,7 @@ public class LoadZTRecordSection implements CycleLogic{
 		JSONObject object=new JSONObject();
 		object.put("status", code);
 		object.put("msg",msg);
-		if(code==100){
-			object.put("array",jsonary);
-		}
+		
 		ServletOutputStream out=null;
 		try {
 			SafetyUtils.hDString(object.toString(), response, out);
