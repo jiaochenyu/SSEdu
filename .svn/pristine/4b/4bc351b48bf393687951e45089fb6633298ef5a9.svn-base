@@ -1,0 +1,10 @@
+{"total":$!{total},"rows":[
+#set($size = $list.size())
+#foreach($obj in $list)
+	#if($velocityCount == $size)
+	{"uuid":"$!{obj.uuid}","schoolid":"$!{obj.schoolid}","schoolname":"$!{obj.schoolname}","courseid":"$!{obj.courseid}","coursename":"$!{obj.coursename}","sectionid":"$!{obj.sectionid}","sectionname":"$!{obj.sectionname}","content":"$!{obj.content}","answer":"$!{obj.answer}","rightanswer":"$!{obj.rightanswer}","issingle":"$!{obj.issingle}","imgpath":"$!{obj.imgpath}","imgstate":"$!{obj.imgstate}","remarks":"$!{obj.remarks}","times":"$!{obj.times}"}
+	#else
+	{"uuid":"$!{obj.uuid}","schoolid":"$!{obj.schoolid}","schoolname":"$!{obj.schoolname}","courseid":"$!{obj.courseid}","coursename":"$!{obj.coursename}","sectionid":"$!{obj.sectionid}","sectionname":"$!{obj.sectionname}","content":"$!{obj.content}","answer":"$!{obj.answer}","rightanswer":"$!{obj.rightanswer}","issingle":"$!{obj.issingle}","imgpath":"$!{obj.imgpath}","imgstate":"$!{obj.imgstate}","remarks":"$!{obj.remarks}","times":"$!{obj.times}"},
+	#end
+#end
+]}

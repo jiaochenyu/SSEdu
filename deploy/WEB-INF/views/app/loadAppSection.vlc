@@ -1,0 +1,10 @@
+[
+#set($size = $list.size())
+#foreach($obj in $list)
+	#if($velocityCount == $size)
+	{"uuid":"$!{obj.uuid}","sectionname":"$!{obj.sectionname}"}
+	#else
+	{"uuid":"$!{obj.uuid}","sectionname":"$!{obj.sectionname}"},
+	#end
+#end
+]

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="gsys">
+
+
+	<select id="findUserByUuid" parameterType="string" resultType="com.app.entity.AppUser">
+		select * from app_user where uuid=#{useruuid}
+	</select>
+
+
+	<select id="findUserByName" parameterType="string" resultType="com.app.entity.AppUser">
+		select * from app_user where username=#{username}
+	</select>
+	
+	<select id="getCourseIdByName" parameterType="string" resultType="string">
+		select uuid from app_course where coursename=#{coursename}
+	</select>
+	
+	<select id="getSchoolIdByName" parameterType="string" resultType="string">
+		select uuid from app_school where schoolname=#{schoolname}
+	</select>
+	
+	<select id="getSectionIdByName" parameterType="string" resultType="string">
+		select uuid from app_section where sectionname=#{sectionname}
+	</select>
+	
+	<insert id="insertAppQuiz" parameterType="com.app.entity.AppQuiz">
+		insert into app_quiz (uuid,schoolid,schoolname,courseid,coursename,sectionid,sectionname,content,answer,rightanswer,createtime,issingle)
+		values(#{uuid},#{schoolid},#{schoolname},#{courseid},#{coursename},#{sectionid},#{sectionname},#{content},#{answer},#{rightanswer},#{createtime},#{issingle})
+	</insert>
+	
+	<select id="getAllSection" parameterType="java.util.Map" resultType="com.app.entity.AppSection">
+		select section.* from app_user as u 
+		join app_course as course on u.schoolid=course.schoolid
+		join app_section as section on section.courseid=course.uuid
+		where u.username=#{username} and course.coursename=#{sub}
+		order by section.seq
+	</select>
+	
+	<select id="getRandomQuiz" resultType="com.app.entity.AppQuiz">
+		select * from app_quiz where sectionid in
+			<foreach collection="array" item="id" open="(" close=")" separator=",">
+				#{id}
+			</foreach>
+		order by random() limit 10;
+	</select>
+	
+	<select id="listtempimg" parameterType="int" resultType="com.app.entity.AppQuiz">
+		select * from app_quiz where imgstate=#{imgstate}
+	</select>
+	
+	<update id="updateAppQuiz" parameterType="com.app.entity.AppQuiz">
+		update app_quiz set imgpath=#{imgpath},imgstate=#{imgstate} where uuid = #{uuid}
+	</update>
+	
+</mapper>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="gsys">
+	
+	<select id="findAppUserByUsername" resultType="com.app.entity.AppUser" parameterType="String">
+		select * from app_user where username = #{username}
+	</select>
+	<select id="listZtRecordSectionByCid" resultType="com.app.entity.AppSection" parameterType="java.util.Map">
+		select * from app_section where uuid in(
+			select DISTINCT sectionid from app_ztrecord where 1=1
+		 	<if test="whether!=null"> and whether=#{whether}</if>
+			<if test="courseid!=null"> and courseid=#{courseid}</if>
+		 )
+	</select>
+	
+	<select id="listMyStudents" resultType="com.app.entity.AppUser" parameterType="java.util.Map">
+		select * from app_user where uuid in(select sid from app_teacher_student where tid=#{appuserid})
+		<if test="condition!=null"> and (upper(realname)=upper(#{condition}) or username ilike '%'||#{condition}||'%')</if>
+		order by realname
+	</select>
+
+	<select id="listZtmain" resultType="com.app.entity.AppZtmain" parameterType="java.util.Map">
+		select * from app_ztmain where appuserid=#{appuserid}
+		<if test="courseid!=null"> and courseid=#{courseid}</if>
+		order by createtime desc
+		<if test="limit!=null and offset!=null">limit #{limit} offset #{offset}</if>
+	</select>
+
+	<select id="listZtrecord" resultType="com.app.entity.AppZtrecord" parameterType="java.util.Map">
+		select * from app_ztrecord where appuserid=#{appuserid}
+		<if test="ztmainid!=null"> and ztmainid=#{ztmainid}</if>
+		<if test="whether!=null"> and whether=#{whether}</if>
+		<if test="courseid!=null"> and courseid=#{courseid}</if>
+		<if test="sectionid!=null"> and sectionid=#{sectionid}</if>
+		<if test="distinct!=null"> and uuid in(select MAX(uuid) from app_ztrecord where appuserid=#{appuserid}
+			<if test="sectionid!=null"> and sectionid=#{sectionid}</if>
+			<if test="whether!=null"> and whether=#{whether}</if>
+		 	GROUP BY quizid)
+		 </if>
+		<if test="distinct==null">order by createtime desc</if>
+		<if test="limit!=null and offset!=null">limit #{limit} offset #{offset}</if>
+	</select>
+	
+	<select id="findAppQuizById" parameterType="String" resultType="com.app.entity.AppQuiz">
+		select * from app_quiz where uuid = #{quizid}
+	</select>
+
+	<select id="selectQuizToTal" parameterType="java.util.Map" resultType="int">
+		select count(1) from app_quiz
+	</select>
+	
+	<select id="listQuizByMap" parameterType="java.util.Map" resultType="com.app.entity.AppQuiz">
+		select * from app_quiz
+		limit #{limit} offset #{offset}
+	</select>
+	
+	<select id="listAppSchool" resultType="com.app.entity.AppSchool">
+		select * from app_school
+	</select>
+	
+	<select id="listAppTeacher" resultType="com.app.entity.AppUser">
+		select * from app_user where part = 'T'
+	</select>
+	
+	<select id="listAppCourse" resultType="com.app.entity.AppCourse">
+		select * from app_course where schoolid=#{schoolid}
+	</select>
+	
+	<select id="listAppSection" resultType="com.app.entity.AppSection">
+		select * from app_section where courseid=#{courseid}
+	</select>
+	
+	<select id="mapSection" resultType="com.app.entity.AppSection" parameterType="String">
+		select * from app_section where courseid=#{courseid}
+	</select>
+	
+	
+	<insert id="addAppQuiz" parameterType="com.app.entity.AppQuiz">
+		insert into app_quiz(
+uuid,schoolid,schoolname,courseid,coursename,sectionid,sectionname,content,answer,rightanswer,createtime,issingle,level,teacherid,teachername,imgpath,imgstate,remarks,times) 
+values(
+#{uuid},#{schoolid},#{schoolname},#{courseid},#{coursename},#{sectionid},#{sectionname},#{content},#{answer},#{rightanswer},#{createtime},#{issingle},#{level},#{teacherid},#{teachername},#{imgpath},#{imgstate},#{remarks},#{times});
+	</insert>
+	<insert id="addAppZtrecord" parameterType="com.app.entity.AppZtrecord">
+		insert into app_ztrecord(uuid,courseid,coursename,sectionid,sectionname,quizid,content,answer,rightanswer,myanswer,whether,createtime,times,appuserid,ztmainid,imgpath,issingle,remarks) 
+		values(#{uuid},#{courseid},#{coursename},#{sectionid},#{sectionname},#{quizid},#{content},#{answer},#{rightanswer},#{myanswer},#{whether},#{createtime},#{times},#{appuserid},#{ztmainid},#{imgpath},#{issingle},#{remarks});
+	</insert>
+	
+	<insert id="addAppZtmain" parameterType="com.app.entity.AppZtmain">
+		insert into app_ztmain(uuid,ztmainname,createtime,times,accuracy,courseid,coursename,appuserid) values(#{uuid},#{ztmainname},#{createtime},#{times},#{accuracy},#{courseid},#{coursename},#{appuserid});
+	</insert>
+	
+	<insert id="addAppUser" parameterType="com.app.entity.AppUser">
+		insert into app_user(uuid,username,password,part) values(#{uuid},#{username},#{password},#{part});
+	</insert>
+	
+	
+</mapper>

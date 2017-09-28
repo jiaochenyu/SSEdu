@@ -1,0 +1,29 @@
+#log4j.rootLogger=INFO,toConsole,toFile
+log4j.rootLogger=INFO,toFile
+
+#log4j.appender.toConsole=org.apache.log4j.ConsoleAppender
+#log4j.appender.toConsole.Threshold=INFO
+#log4j.appender.toConsole.Target=System.out
+#log4j.appender.toConsole.layout=org.apache.log4j.PatternLayout
+#log4j.appender.toConsole.layout.ConversionPattern=[%d{yyyy-MM-dd HH:mm:ss}] [%p] %m%n
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d %p [%c] - %m%n
+
+
+log4j.appender.toFile=org.apache.log4j.DailyRollingFileAppender
+log4j.appender.toFile.File=D:/Users/Logs/PDF.log
+log4j.appender.toFile.MaxFileSize=100kb
+log4j.appender.toFile.MaxBackupIndex=1
+log4j.appender.toFile.layout=org.apache.log4j.PatternLayout
+log4j.appender.toFile.layout.ConversionPattern=[%d{yyyy-MM-dd HH:mm:ss}] [%p] %m%n
+
+
+log4j.logger.com.ibatis=debug
+log4j.logger.com.ibatis.common.jdbc.SimpleDataSource=debug
+log4j.logger.com.ibatis.common.jdbc.ScriptRunner=debug
+log4j.logger.com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate=debug
+log4j.logger.java.sql.Connection=debug
+log4j.logger.java.sql.Statement=debug
+log4j.logger.java.sql.PreparedStatement=debug,stdout
+

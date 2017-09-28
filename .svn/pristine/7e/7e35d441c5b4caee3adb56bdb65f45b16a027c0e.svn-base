@@ -1,0 +1,10 @@
+[
+#set($size = $list.size())
+#foreach($obj in $list)
+	#if($velocityCount == $size)
+	{"id":"$!{obj.menuid}","text":"$!{obj.menuname}"#if($!{obj.haschild}=='1'),"state":"closed"#end,"attributes":{"url":"$!{obj.url}"}}
+	#else
+	{"id":"$!{obj.menuid}","text":"$!{obj.menuname}"#if($!{obj.haschild}=='1'),"state":"closed"#end,"attributes":{"url":"$!{obj.url}"}},
+	#end
+#end
+]

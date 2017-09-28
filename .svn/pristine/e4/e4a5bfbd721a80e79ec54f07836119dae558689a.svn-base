@@ -1,0 +1,10 @@
+[
+#set($size = $list.size())
+#foreach($obj in $list)
+	#if($velocityCount == $size)
+	{"id":"$!{obj.menuid}","parentId":"$!{obj.parentid}","name":"$!{obj.menuname}","uri":"$!{obj.url}","checked":"$!{obj.checked}"}
+	#else
+	{"id":"$!{obj.menuid}","parentId":"$!{obj.parentid}","name":"$!{obj.menuname}","uri":"$!{obj.url}","checked":"$!{obj.checked}"},
+	#end
+#end
+]

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="src/logic" kind="src" output="bin" path="src/logic"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/activation.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/commons-codec-1.4.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/commons-fileupload-1.2.2.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/cycle_base_1.0.1.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/jaxen-1.1-beta-6.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/jcommon-1.0.17.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/json_simple-1.1.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/jstl-api-1.2.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/jstl-impl-1.2.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/mail.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/mybatis-3.0.6.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/postgresql-9.1-902.jdbc4.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/servlet-api-2.5.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/standard-1.1.2.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/tk-filters.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/velocity-1.6.4-dep.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/poi-3.13.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/json-20160810.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/poi-ooxml-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/poi-ooxml-schemas-3.13-20150929.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/json-lib-2.4-jdk15.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/ezmorph-1.0.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/apache-collections-commons-collections-3.1.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/commons-beanutils-1.8.0.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/commons-beanutils-bean-collections-1.8.0.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/commons-beanutils-core-1.8.0.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/xmlbeans-2.6.0.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/gson-2.2.4.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/jiguang-common-1.0.8.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/jsms-client-1.2.3.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/slf4j-log4j12-1.7.7.jar"/>
+	<classpathentry kind="lib" path="deploy/WEB-INF/lib/jpush-client-3.3.1.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

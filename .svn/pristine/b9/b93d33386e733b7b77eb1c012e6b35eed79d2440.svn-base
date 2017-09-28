@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="gsys">
+<insert id="insertMenus" parameterType="com.gsys.model.Menus">
+insert into sys_menus (
+menuid,menuname,parentid,url,seq,mtype,icon
+) values (
+#{menuid},#{menuname},#{parentid},#{url},#{seq},#{mtype},#{icon}
+)
+</insert>
+<delete id="deleteMenus" parameterType="String">
+delete from sys_menus where menuid=#{menuid}
+</delete>
+<delete id="deleteMenusByParentid" parameterType="String">
+delete from sys_menus where parentid=#{parentid}
+</delete>
+<select id="listMenus" resultType="com.gsys.model.Menus" parameterType="java.util.Map">
+select * from sys_menus
+ where 1=1
+<if test="menuid!=null"> and menuid=#{menuid}</if>
+<if test="menuname!=null"> and menuname=#{menuname}</if>
+<if test="parentid!=null"> and parentid=#{parentid}</if>
+<if test="url!=null"> and url=#{url}</if>
+<if test="mtype!=null"> and mtype=#{mtype}</if>
+</select>
+<select id="countMenus" resultType="int" parameterType="java.util.Map">
+select count(1) from sys_menus
+ where 1=1
+<if test="menuid!=null"> and menuid=#{menuid}</if>
+<if test="menuname!=null"> and menuname=#{menuname}</if>
+<if test="parentid!=null"> and parentid=#{parentid}</if>
+<if test="url!=null"> and url=#{url}</if>
+<if test="mtype!=null"> and mtype=#{mtype}</if>
+</select>
+<select id="listLoginUserMenus" resultType="com.gsys.model.Menus" parameterType="java.util.Map">
+select m.* from sys_menus as m
+ inner join (
+ select a.authid from sys_role_auth as a
+ where a."type"=#{type}
+ and a.roleid in (
+  select ru.roleid from sys_role_users as ru
+  where ru.userid=#{userid}
+ )
+ group by a.authid
+ ) as n on (n.authid=m.menuid)
+ where m.parentid=#{parentid}
+ order by m.seq
+</select>
+<select id="listMenusByParentid" resultType="com.gsys.model.Menus" parameterType="String">
+select * from sys_menus where parentid=#{parentid} order by seq
+</select>
+<select id="countMenusByParentid" resultType="int" parameterType="String">
+select count(1) from sys_menus where parentid=#{parentid}
+</select>
+<select id="getMenuUrlByMenuid" resultType="String" parameterType="String">
+select url from sys_menus where menuid=#{menuid}
+</select>
+<select id="getMenus" resultType="com.gsys.model.Menus" parameterType="String">
+select * from sys_menus where menuid=#{menuid}
+</select>
+<select id="getMenusParentid" resultType="String" parameterType="String">
+select parentid from sys_menus where menuid=#{menuid}
+</select>
+<select id="listAllMenus" resultType="com.gsys.model.Menus">
+select * from sys_menus where 1=1 order by seq
+</select>
+<select id="listPowerMenus" resultType="com.gsys.model.Menus" parameterType="java.util.Map">
+select m.*,n.uuid as "checked" from sys_menus as m
+ left join (
+ select a.* from sys_role_auth as a
+ where a."type"=#{type}
+<if test="roleid!=null"> and a.roleid=#{roleid}</if>
+ ) as n on (n.authid=m.menuid)
+ where 1=1
+<if test="menuid!=null"> and m.menuid=#{menuid}</if>
+<if test="menuname!=null"> and m.menuname=#{menuname}</if>
+<if test="parentid!=null"> and m.parentid=#{parentid}</if>
+ order by m.seq
+</select>
+<select id="listPowerPages" resultType="com.gsys.model.Pages" parameterType="java.util.Map">
+select p.*,n.uuid as "checked" from sys_pages as p
+ left join (
+ select a.* from sys_role_auth as a
+ where a."type"=#{type}
+<if test="roleid!=null"> and a.roleid=#{roleid}</if>
+ ) as n on (n.authid=p.pageid)
+ where 1=1
+<if test="menuid!=null"> and p.menuid=#{menuid}</if>
+<if test="pageid!=null"> and p.pageid=#{pageid}</if>
+<if test="pagename!=null"> and p.pagename=#{pagename}</if>
+order by p.menuid,p.seq,p.pageid,p.pagename
+</select>
+<select id="listPowerButtons" resultType="com.gsys.model.Buttons" parameterType="java.util.Map">
+select b.*,n.uuid as "checked" from sys_buttons as b
+ left join (
+ select a.* from sys_role_auth as a
+ where a."type"=#{type}
+<if test="roleid!=null"> and a.roleid=#{roleid}</if>
+ ) as n on (n.authid=b.buttonid)
+ where 1=1
+<if test="menuid!=null"> and b.menuid=#{menuid}</if>
+<if test="pageid!=null"> and b.pageid=#{pageid}</if>
+<if test="buttonid!=null"> and b.buttonid=#{buttonid}</if>
+<if test="buttonname!=null"> and b.buttonname=#{buttonname}</if>
+order by b.menuid,b.pageid,b.seq,b.buttonid,b.buttonname
+</select>
+<select id="listPowerPages2" resultType="com.gsys.model.Pages" parameterType="java.util.Map">
+select p.*,n.uuid as "checked" from sys_pages as p
+ left join (
+ select a.* from sys_role_auth as a
+ where a."type"=#{type}
+<if test="roleid!=null"> and a.roleid=#{roleid}</if>
+ ) as n on (n.authid=p.pageid)
+ where 1=1
+ and p.menuid in (
+ select x.authid from sys_role_auth as x
+ where x.type='m'
+<if test="roleid!=null"> and x.roleid=#{roleid}</if>
+ group by x.authid
+ )
+<if test="menuid!=null"> and p.menuid=#{menuid}</if>
+<if test="pageid!=null"> and p.pageid=#{pageid}</if>
+<if test="pagename!=null"> and p.pagename=#{pagename}</if>
+order by p.menuid,p.seq,p.pageid,p.pagename
+</select>
+<select id="listPowerButtons2" resultType="com.gsys.model.Buttons" parameterType="java.util.Map">
+select b.*,n.uuid as "checked" from sys_buttons as b
+ left join (
+ select a.* from sys_role_auth as a
+ where a."type"=#{type}
+<if test="roleid!=null"> and a.roleid=#{roleid}</if>
+ ) as n on (n.authid=b.buttonid)
+ where 1=1
+ and b.menuid in (
+ select x.authid from sys_role_auth as x
+ where x.type='m'
+<if test="roleid!=null"> and x.roleid=#{roleid}</if>
+ group by x.authid
+ )
+ and b.pageid in (
+ select y.authid from sys_role_auth as y
+ where y.type='p'
+<if test="roleid!=null"> and y.roleid=#{roleid}</if>
+ group by y.authid
+ )
+<if test="menuid!=null"> and b.menuid=#{menuid}</if>
+<if test="pageid!=null"> and b.pageid=#{pageid}</if>
+<if test="buttonid!=null"> and b.buttonid=#{buttonid}</if>
+<if test="buttonname!=null"> and b.buttonname=#{buttonname}</if>
+order by b.menuid,b.pageid,b.seq,b.buttonid,b.buttonname
+</select>
+<select id="listLoginUserAuthUrl" resultType="com.gsys.model.AuthUrl" parameterType="java.util.Map">
+select m.* from sys_auth_url as m
+ inner join (
+ select a.authid from sys_role_auth as a
+ where 1=1
+<if test="type!=null"> and a.type=#{type}</if>
+ and a.roleid in (
+  select ru.roleid from sys_role_users as ru
+  where ru.userid=#{userid}
+ )
+ group by a.authid
+ ) as n on (n.authid=m.authid)
+ where 1=1
+<if test="authid!=null"> and m.authid=#{authid}</if>
+<if test="accurl!=null"> and m.accurl=#{accurl}</if>
+<if test="type!=null"> and m.type=#{type}</if>
+order by m.authid
+</select>
+<select id="listLoginUserRoleAuth" resultType="com.gsys.model.RoleAuth" parameterType="java.util.Map">
+select a.* from sys_role_auth as a
+ where a.roleid in (
+  select ru.roleid from sys_role_users as ru
+  where ru.userid=#{userid}
+ )
+<if test="roleid!=null"> and a.roleid=#{roleid}</if>
+<if test="type!=null"> and a.type=#{type}</if>
+<if test="authid!=null"> and a.authid=#{authid}</if>
+order by a.authid
+</select>
+
+<insert id="insertUsers" parameterType="com.gsys.model.Users">
+insert into sys_users (
+uuid,loginid,displayname,email,password,type,locked,created
+) values (
+#{uuid},#{loginid},#{displayname},#{email},#{password},#{type},#{locked},#{created}
+)
+</insert>
+<update id="updateUsers" parameterType="com.gsys.model.Users">
+update sys_users set displayname=#{displayname},email=#{email}
+ where uuid=#{uuid}
+</update>
+<update id="updateUsersSetPassword" parameterType="com.gsys.model.Users">
+update sys_users set password=#{password} where uuid=#{uuid}
+</update>
+<update id="updateUsersSetLocked" parameterType="com.gsys.model.Users">
+update sys_users set locked=#{locked} where uuid=#{uuid} and loginid!='admin'
+</update>
+<delete id="deleteUsers" parameterType="String">
+delete from sys_users where uuid=#{uuid} and loginid!='admin'
+</delete>
+<select id="listUsers" resultType="com.gsys.model.Users" parameterType="java.util.Map">
+select * from sys_users
+ where 1=1
+<if test="text!=null"> and (upper(loginid)=upper(#{text}) or email ilike '%'||#{text}||'%')</if>
+<if test="loginid!=null"> and upper(loginid)=upper(#{loginid})</if>
+<if test="displayname!=null"> and displayname=#{displayname}</if>
+<if test="email!=null"> and email=#{email}</if>
+<if test="locked!=null"> and locked=#{locked}</if>
+order by loginid
+</select>
+<select id="countUsers" resultType="int" parameterType="java.util.Map">
+select count(1) from sys_users
+ where 1=1
+<if test="text!=null"> and (upper(loginid)=upper(#{text}) or email ilike '%'||#{text}||'%')</if>
+<if test="loginid!=null"> and upper(loginid)=upper(#{loginid})</if>
+<if test="displayname!=null"> and displayname=#{displayname}</if>
+<if test="email!=null"> and email=#{email}</if>
+<if test="locked!=null"> and locked=#{locked}</if>
+</select>
+<select id="listPagedUsers" resultType="com.gsys.model.Users" parameterType="java.util.Map">
+select * from sys_users
+ where 1=1
+<if test="text!=null"> and (upper(loginid)=upper(#{text}) or email ilike '%'||#{text}||'%')</if>
+<if test="loginid!=null"> and upper(loginid)=upper(#{loginid})</if>
+<if test="displayname!=null"> and displayname=#{displayname}</if>
+<if test="email!=null"> and email=#{email}</if>
+<if test="locked!=null"> and locked=#{locked}</if>
+order by loginid
+limit #{limit} offset #{offset}
+</select>
+<select id="getUsers" resultType="com.gsys.model.Users" parameterType="String">
+select * from sys_users where uuid=#{uuid}
+</select>
+<select id="getLoginUsersByMap" resultType="com.gsys.model.Users" parameterType="java.util.Map">
+select * from sys_users where upper(loginid)=upper(#{loginid})
+</select>
+
+<insert id="insertRoles" parameterType="com.gsys.model.Roles">
+insert into sys_roles (
+uuid,rolename,rolememo
+) values (
+#{uuid},#{rolename},#{rolememo}
+)
+</insert>
+<update id="updateRoles" parameterType="com.gsys.model.Roles">
+update sys_roles set rolename=#{rolename},rolememo=#{rolememo}
+ where uuid=#{uuid}
+</update>
+<delete id="deleteRoles" parameterType="String">
+delete from sys_roles where uuid=#{uuid}
+</delete>
+<select id="listRoles" resultType="com.gsys.model.Roles" parameterType="java.util.Map">
+select * from sys_roles
+ where 1=1
+<if test="rolename!=null"> and rolename=#{rolename}</if>
+<if test="rolememo!=null"> and rolememo=#{rolememo}</if>
+order by rolename
+</select>
+<select id="countRoles" resultType="int" parameterType="java.util.Map">
+select count(1) from sys_roles
+ where 1=1
+<if test="rolename!=null"> and rolename=#{rolename}</if>
+<if test="rolememo!=null"> and rolememo=#{rolememo}</if>
+</select>
+<select id="listPagedRoles" resultType="com.gsys.model.Roles" parameterType="java.util.Map">
+select * from sys_roles
+ where 1=1
+<if test="rolename!=null"> and rolename=#{rolename}</if>
+<if test="rolememo!=null"> and rolememo=#{rolememo}</if>
+order by rolename
+limit #{limit} offset #{offset}
+</select>
+<select id="getRoles" resultType="com.gsys.model.Roles" parameterType="String">
+select * from sys_roles where uuid=#{uuid}
+</select>
+<select id="countUsersByRoleMap" resultType="int" parameterType="java.util.Map">
+select count(1) from sys_role_users as ru
+ inner join sys_users as u on (ru.userid=u.uuid)
+ where ru.roleid=#{roleid} and u.loginid!=#{adminid}
+<if test="locked!=null"> and u.locked=#{locked}</if>
+</select>
+
+<insert id="insertRoleUsers" parameterType="com.gsys.model.RoleUsers">
+insert into sys_role_users (
+uuid,roleid,userid
+) values (
+#{uuid},#{roleid},#{userid}
+)
+</insert>
+<update id="updateRoleUsers" parameterType="com.gsys.model.RoleUsers">
+update sys_role_users set roleid=#{roleid},userid=#{userid}
+ where uuid=#{uuid}
+</update>
+<delete id="deleteRoleUsersBySelf" parameterType="com.gsys.model.RoleUsers">
+delete from sys_role_users where roleid=#{roleid} and userid=#{userid}
+</delete>
+<delete id="deleteRoleUsersByRoleid" parameterType="String">
+delete from sys_role_users where roleid=#{roleid}
+</delete>
+<select id="listRoleUsers" resultType="com.gsys.model.RoleUsers" parameterType="java.util.Map">
+select t.uuid,t.roleid,u.uuid as userid,u.loginid,u.displayname,u.email from (
+select * from sys_role_users as m where 1=1
+<if test="roleid!=null"> and m.roleid=#{roleid}</if>
+<if test="userid!=null"> and m.userid=#{userid}</if>
+) as t
+ right join sys_users as u on (t.userid=u.uuid)
+ where u.loginid!=#{adminid}
+<if test="loginid!=null"> and upper(u.loginid)=upper(#{loginid})</if>
+<if test="locked!=null"> and u.locked=#{locked}</if>
+order by u.loginid
+</select>
+<select id="countRoleUsers" resultType="int" parameterType="java.util.Map">
+select count(1) from (
+select * from sys_role_users as m where 1=1
+<if test="roleid!=null"> and m.roleid=#{roleid}</if>
+<if test="userid!=null"> and m.userid=#{userid}</if>
+) as t
+ right join sys_users as u on (t.userid=u.uuid)
+ where u.loginid!=#{adminid}
+<if test="loginid!=null"> and upper(u.loginid)=upper(#{loginid})</if>
+<if test="locked!=null"> and u.locked=#{locked}</if>
+</select>
+<select id="listPagedRoleUsers" resultType="com.gsys.model.RoleUsers" parameterType="java.util.Map">
+select t.uuid,t.roleid,u.uuid as userid,u.loginid,u.displayname,u.email from (
+select * from sys_role_users as m where 1=1
+<if test="roleid!=null"> and m.roleid=#{roleid}</if>
+<if test="userid!=null"> and m.userid=#{userid}</if>
+) as t
+ right join sys_users as u on (t.userid=u.uuid)
+ where u.loginid!=#{adminid}
+<if test="loginid!=null"> and upper(u.loginid)=upper(#{loginid})</if>
+<if test="locked!=null"> and u.locked=#{locked}</if>
+order by u.loginid
+limit #{limit} offset #{offset}
+</select>
+<select id="getRoleUsers" resultType="com.gsys.model.RoleUsers" parameterType="String">
+select * from sys_role_users where uuid=#{uuid}
+</select>
+
+<insert id="insertRoleAuth" parameterType="com.gsys.model.RoleAuth">
+insert into sys_role_auth (
+uuid,roleid,type,authid
+) values (
+#{uuid},#{roleid},#{type},#{authid}
+)
+</insert>
+<update id="updateRoleAuth" parameterType="com.gsys.model.RoleAuth">
+update sys_role_auth set roleid=#{roleid},type=#{type},authid=#{authid}
+ where uuid=#{uuid}
+</update>
+<delete id="deleteRoleAuthBySelf" parameterType="com.gsys.model.RoleAuth">
+delete from sys_role_auth where roleid=#{roleid} and authid=#{authid}
+</delete>
+<delete id="deleteRoleAuthByMap" parameterType="java.util.Map">
+delete from sys_role_auth where roleid=#{roleid} and type=#{type}
+</delete>
+<delete id="deleteRoleAuthByRoleid" parameterType="String">
+delete from sys_role_auth where roleid=#{roleid}
+</delete>
+<select id="listRoleAuth" resultType="com.gsys.model.RoleAuth" parameterType="java.util.Map">
+select * from sys_role_auth
+ where 1=1
+<if test="roleid!=null"> and roleid=#{roleid}</if>
+<if test="type!=null"> and type=#{type}</if>
+<if test="authid!=null"> and authid=#{authid}</if>
+</select>
+<select id="countRoleAuth" resultType="int" parameterType="java.util.Map">
+select count(1) from sys_role_auth
+ where 1=1
+<if test="roleid!=null"> and roleid=#{roleid}</if>
+<if test="type!=null"> and type=#{type}</if>
+<if test="authid!=null"> and authid=#{authid}</if>
+</select>
+<select id="listAllRoleAuth" resultType="com.gsys.model.RoleAuth">
+select * from sys_role_auth where 1=1 order by authid
+</select>
+<select id="getRoleAuth" resultType="com.gsys.model.RoleAuth" parameterType="String">
+select * from sys_role_auth where uuid=#{uuid}
+</select>
+
+<insert id="insertAuthUrl" parameterType="com.gsys.model.AuthUrl">
+insert into sys_auth_url (
+authid,accurl,type
+) values (
+#{authid},#{accurl},#{type}
+)
+</insert>
+<delete id="deleteAuthUrlBySelf" parameterType="com.gsys.model.AuthUrl">
+delete from sys_auth_url where authid=#{authid} and type=#{type}
+</delete>
+<delete id="deleteAuthUrlByMap" parameterType="java.util.Map">
+delete from sys_auth_url where type=#{type}
+</delete>
+<select id="listAuthUrl" resultType="com.gsys.model.AuthUrl" parameterType="java.util.Map">
+select * from sys_auth_url
+ where 1=1
+<if test="authid!=null"> and authid=#{authid}</if>
+<if test="accurl!=null"> and accurl=#{accurl}</if>
+<if test="type!=null"> and type=#{type}</if>
+</select>
+<select id="countAuthUrl" resultType="int" parameterType="java.util.Map">
+select count(1) from sys_auth_url
+ where 1=1
+<if test="authid!=null"> and authid=#{authid}</if>
+<if test="accurl!=null"> and accurl=#{accurl}</if>
+<if test="type!=null"> and type=#{type}</if>
+</select>
+<select id="listAllAuthUrl" resultType="com.gsys.model.AuthUrl">
+select * from sys_auth_url where 1=1 order by authid
+</select>
+
+<insert id="insertPages" parameterType="com.gsys.model.Pages">
+insert into sys_pages (
+menuid,pageid,pagename,seq
+) values (
+#{menuid},#{pageid},#{pagename},#{seq}
+)
+</insert>
+<update id="updatePages" parameterType="com.gsys.model.Pages">
+update sys_pages set menuid=#{menuid},pagename=#{pagename},seq=#{seq}
+ where pageid=#{pageid}
+</update>
+<update id="updatePagesSetSeq" parameterType="com.gsys.model.Pages">
+update sys_pages set seq=#{seq}
+ where pageid=#{pageid}
+</update>
+<delete id="deletePages" parameterType="String">
+delete from sys_pages where pageid=#{pageid}
+</delete>
+<select id="listPages" resultType="com.gsys.model.Pages" parameterType="java.util.Map">
+select * from sys_pages
+ where 1=1
+<if test="menuid!=null"> and menuid=#{menuid}</if>
+<if test="pageid!=null"> and pageid=#{pageid}</if>
+<if test="pagename!=null"> and pagename=#{pagename}</if>
+order by menuid,pageid,pagename
+</select>
+<select id="countPages" resultType="int" parameterType="java.util.Map">
+select count(1) from sys_pages
+ where 1=1
+<if test="menuid!=null"> and menuid=#{menuid}</if>
+<if test="pageid!=null"> and pageid=#{pageid}</if>
+<if test="pagename!=null"> and pagename=#{pagename}</if>
+</select>
+<select id="listPagedPages" resultType="com.gsys.model.Pages" parameterType="java.util.Map">
+select * from sys_pages
+ where 1=1
+<if test="menuid!=null"> and menuid=#{menuid}</if>
+<if test="pageid!=null"> and pageid=#{pageid}</if>
+<if test="pagename!=null"> and pagename=#{pagename}</if>
+order by menuid,pageid,pagename
+limit #{limit} offset #{offset}
+</select>
+<select id="getPagesByMap" resultType="com.gsys.model.Pages" parameterType="java.util.Map">
+select * from sys_pages where pageid=#{pageid}
+</select>
+
+<insert id="insertButtons" parameterType="com.gsys.model.Buttons">
+insert into sys_buttons (
+menuid,pageid,buttonid,buttonname,seq
+) values (
+#{menuid},#{pageid},#{buttonid},#{buttonname},#{seq}
+)
+</insert>
+<update id="updateButtons" parameterType="com.gsys.model.Buttons">
+update sys_buttons set menuid=#{menuid},buttonname=#{buttonname},seq=#{seq}
+ where buttonid=#{buttonid} and pageid=#{pageid}
+</update>
+<update id="updateButtonsSetSeq" parameterType="com.gsys.model.Buttons">
+update sys_buttons set seq=#{seq}
+ where buttonid=#{buttonid} and pageid=#{pageid}
+</update>
+<delete id="deleteButtons" parameterType="com.gsys.model.Buttons">
+delete from sys_buttons where buttonid=#{buttonid} and pageid=#{pageid}
+</delete>
+<select id="listButtons" resultType="com.gsys.model.Buttons" parameterType="java.util.Map">
+select * from sys_buttons
+ where 1=1
+<if test="menuid!=null"> and menuid=#{menuid}</if>
+<if test="pageid!=null"> and pageid=#{pageid}</if>
+<if test="buttonid!=null"> and buttonid=#{buttonid}</if>
+<if test="buttonname!=null"> and buttonname=#{buttonname}</if>
+order by menuid,pageid,buttonid,buttonname
+</select>
+<select id="countButtons" resultType="int" parameterType="java.util.Map">
+select count(1) from sys_buttons
+ where 1=1
+<if test="menuid!=null"> and menuid=#{menuid}</if>
+<if test="pageid!=null"> and pageid=#{pageid}</if>
+<if test="buttonid!=null"> and buttonid=#{buttonid}</if>
+<if test="buttonname!=null"> and buttonname=#{buttonname}</if>
+</select>
+<select id="listPagedButtons" resultType="com.gsys.model.Buttons" parameterType="java.util.Map">
+select * from sys_buttons
+ where 1=1
+<if test="menuid!=null"> and menuid=#{menuid}</if>
+<if test="pageid!=null"> and pageid=#{pageid}</if>
+<if test="buttonid!=null"> and buttonid=#{buttonid}</if>
+<if test="buttonname!=null"> and buttonname=#{buttonname}</if>
+order by menuid,pageid,buttonid,buttonname
+limit #{limit} offset #{offset}
+</select>
+<select id="getButtonsByMap" resultType="com.gsys.model.Buttons" parameterType="java.util.Map">
+select * from sys_buttons where buttonid=#{buttonid} and pageid=#{pageid}
+</select>
+
+<insert id="insertLogs" parameterType="com.gsys.model.Logs">
+insert into sys_logs (
+uuid,ip,userid,otime,aurl,pagename,type
+) values (
+#{uuid},#{ip},#{userid},#{otime},#{aurl},#{pagename},#{type}
+)
+</insert>
+</mapper>

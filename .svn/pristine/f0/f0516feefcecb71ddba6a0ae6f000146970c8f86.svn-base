@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<project name= "cyc" default= "deploy" basedir= "." >
+     <target name= "deploy">
+     	<copy todir="deploy/WEB-INF/cycle">
+     		<fileset dir="src/cycle">
+     		</fileset>
+     	</copy>
+     	<copy todir="deploy/WEB-INF/logic">
+     	     <fileset dir="bin">
+     	     	<include name="**/*.class"/>
+     	     </fileset>
+     	</copy>
+		<jar destfile="deploy/WEB-INF/lib/gsystem.jar" basedir="deploy/WEB-INF/logic"/>
+     	<copy todir="deploy/WEB-INF/views">
+     	     <fileset dir="src/views">
+     	     </fileset>
+     	</copy>
+     	<delete dir="deploy/WEB-INF/logic"/>
+     </target>
+</project>

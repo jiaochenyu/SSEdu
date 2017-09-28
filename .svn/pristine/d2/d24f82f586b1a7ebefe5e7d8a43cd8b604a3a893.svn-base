@@ -1,0 +1,30 @@
+<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
+
+<input id="school" />123
+<input id="course" />
+<input id="section" />
+<input id="teacher" />
+<form action="">
+	<input type="hidden" name="schoolid" />
+	<input type="hidden" name="schoolname" />
+	<input type="hidden" name="courseid" />
+	<input type="hidden" name="coursename" />
+	<input type="hidden" name="sectionid" />
+	<input type="hidden" name="sectionname" />
+	<input type="hidden" name="teacherid" />
+	<input type="hidden" name="teachername" />
+	<input type="file" name="file" />
+</form>
+
+<script>
+	$(function(){
+		$('#school').combobox({    
+		    url:'app-loadAppSchool.cyc',    
+		    valueField:'uuid',    
+		    textField:'schoolname',
+		    onSelect:function(record){
+		    	alert(record);
+		    }
+		}); 
+	});
+</script>

@@ -1,0 +1,10 @@
+{"total":$!{total},"rows":[
+#set($size = $list.size())
+#foreach($obj in $list)
+	#if($velocityCount == $size)
+	{"uuid":"$!{obj.uuid}","loginid":"$!{obj.loginid}","displayname":"$!{obj.displayname}","email":"$!{obj.email}","type":"$!{obj.type}"}
+	#else
+	{"uuid":"$!{obj.uuid}","loginid":"$!{obj.loginid}","displayname":"$!{obj.displayname}","email":"$!{obj.email}","type":"$!{obj.type}"},
+	#end
+#end
+]}
